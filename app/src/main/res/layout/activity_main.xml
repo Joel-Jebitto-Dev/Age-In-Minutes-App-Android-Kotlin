@@ -40,7 +40,8 @@
             android:layout_marginTop="1dp"
             android:textColor="@color/color2"/>
 
-    <Button android:layout_width="match_parent"
+    <Button android:id="@+id/btnDatepicker"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/select_date"
             android:textSize="20sp"

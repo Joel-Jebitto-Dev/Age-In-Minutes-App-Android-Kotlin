@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -14,27 +14,39 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         findViewById<Button>(R.id.btnDatepicker).setOnClickListener { view ->
-            clickDatepicker(view)
-            Toast.makeText(this, "Button", Toast.LENGTH_SHORT).show()
+            clickDatePicker(view)
         }
     }
 
-    fun clickDatepicker(view: View) {
+    private fun clickDatePicker(view: View) {
         val myCalendar = Calendar.getInstance()
         val year = myCalendar.get(Calendar.YEAR)
         val month = myCalendar.get(Calendar.MONTH)
         val day = myCalendar.get(Calendar.DAY_OF_MONTH)
-        val selectedDate = findViewById<TextView>(R.id.tvSelectedDate)
 
-        DatePickerDialog(
+        val dpd = DatePickerDialog(
             this,
             DatePickerDialog.OnDateSetListener { view, year_S, month_S, date_S ->
-                "$date_S/$month_S/$year_S".also { selectedDate.text = it }
 
+                val tvSelectedDate = findViewById<TextView>(R.id.tvSelectedDate)
+                val tvSelectedDateInMinutes = findViewById<TextView>(R.id.tvSelectedDateInMinutes)
+                val selectedDate = "$date_S/$month_S/$year_S"
+                tvSelectedDate.text = selectedDate
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+                val theDate = sdf.parse(selectedDate)
+                val selectedDateInMinutes = theDate!!.time / 60000
+                val currentDate= sdf.parse(sdf.format(System.currentTimeMillis()))
+                val currentDateIoMinutes = currentDate!!.time / 60000
+                val differenceInMinutes = currentDateIoMinutes - selectedDateInMinutes
+                tvSelectedDateInMinutes.text = differenceInMinutes.toString()
             },
             year,
             month,
             day
-        ).show()
+        )
+
+        dpd.datePicker.setMaxDate(Date().time)
+        dpd.show()
     }
+
 }
